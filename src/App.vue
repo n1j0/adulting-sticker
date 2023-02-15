@@ -4,7 +4,7 @@ import Navbar from '@/components/navbar.vue'
 
 <template>
     <navbar/>
-    <div class="container is-max-desktop mx-5">
+    <div class="container is-max-desktop px-5">
         <router-view/>
     </div>
 </template>

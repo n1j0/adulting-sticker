@@ -31,7 +31,9 @@ const uploadPicture = async ($event: any) => {
             <div class="control">
                 <div class="file has-name is-boxed">
                     <label class="file-label">
-                        <input class="file-input" type="file" name="resume" @change="file = $event.target.files[0]" accept="image/png" required>
+                        <input class="file-input" type="file" name="resume"
+                               @change="//@ts-ignore
+                        file = $event.target.files[0]" accept="image/png" required>
                         <span class="file-cta"><span class="file-label">Choose a file…</span></span>
                         <span class="file-name has-text-centered">{{ file ? file.name : 'No file selected' }}</span>
                     </label>
