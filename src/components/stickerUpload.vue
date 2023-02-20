@@ -3,7 +3,9 @@ import { ref as storageRef } from 'firebase/storage'
 import { useFirebaseStorage, useStorageFile } from 'vuefire'
 import { computed, ref } from 'vue'
 
-const props = defineProps<{labels: string[]}>()
+const apiUrl = import.meta.env.VITE_API_URL;
+
+const props = defineProps<{ labels: string[] }>()
 
 const storage = useFirebaseStorage()
 
@@ -16,12 +18,25 @@ const uploadPicture = async () => {
         return
     }
 
-    const fileRef = storageRef(storage, `stickers/${label.value.toLowerCase()}.png`)
+    const lowerCaseLabel = label.value.toLowerCase()
+
+    const fileRef = storageRef(storage, `stickers/${lowerCaseLabel}.png`)
     const { upload } = useStorageFile(fileRef)
     const data = file.value
     if (data) {
         try {
-            await upload(data)
+            await Promise.all([
+                upload(data),
+                fetch(`${apiUrl}/sticker`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        label: lowerCaseLabel,
+                    })
+                }),
+            ])
             window.location.reload()
         } catch (err: any) {
             console.error(err)
